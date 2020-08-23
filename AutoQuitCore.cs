@@ -38,9 +38,9 @@ namespace AutoQuit
             var code = CommandHandler.KillTCPConnectionForProcess(GameController.Window.Process.Id);
 
             if (code == 317)
-            {
                 LogError("AutoQuit: Run program from admin or set compatibility to Run as administrator");
-            }
+            else
+                LogMessage($"{Name}: successful!", 10);
         }
 
         public override void Render()
