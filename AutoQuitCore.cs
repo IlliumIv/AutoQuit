@@ -22,7 +22,7 @@ namespace AutoQuit
         public override bool Initialise()
         {
             Name = "AutoQuit";
-            Input.RegisterKey(Settings.forcedAutoQuit);
+            Input.RegisterKey(Settings.ForcedAutoQuit);
             return true;
         }
 
@@ -48,14 +48,14 @@ namespace AutoQuit
             base.Render();
 
             // Panic Quit Key.
-            if (Input.IsKeyDown(Settings.forcedAutoQuit))
+            if (Input.IsKeyDown(Settings.ForcedAutoQuit))
                 Quit();
 
             var LocalPlayer = GameController.Game.IngameState.Data.LocalPlayer;
             var PlayerHealth = LocalPlayer.GetComponent<Life>();
             if (Settings.Enable && LocalPlayer.IsValid)
             {
-                if (Math.Round(PlayerHealth.HPPercentage, 3) * 100 < (Settings.percentHPQuit.Value) && PlayerHealth.CurHP != 0)
+                if (Math.Round(PlayerHealth.HPPercentage, 3) * 100 < (Settings.PercentHPQuit.Value) && PlayerHealth.CurHP != 0)
                 {
                     try
                     {
@@ -66,7 +66,7 @@ namespace AutoQuit
                         LogError("Error: Something went wrong!", errmsg_time);
                     }
                 }
-                if (PlayerHealth.MaxES > 0 && (Math.Round(PlayerHealth.ESPercentage, 3) * 100 < (Settings.percentESQuit.Value)))
+                if (PlayerHealth.MaxES > 0 && (Math.Round(PlayerHealth.ESPercentage, 3) * 100 < (Settings.PercentESQuit.Value)))
                 {
                     try
                     {
@@ -77,7 +77,7 @@ namespace AutoQuit
                         LogError("Error: Something went wrong!", errmsg_time);
                     }
                 }
-                if (Settings.emptyHPFlasks && gotCharges())
+                if (Settings.EmptyHPFlasks && GotCharges())
                 {
                     try
                     {
@@ -90,10 +90,10 @@ namespace AutoQuit
                 }
             }
         }
-        public bool gotCharges()
+        public bool GotCharges()
         {
             int charges = 0;
-            var flaskList = getAllFlaskInfo();
+            var flaskList = GetAllFlaskInfo();
             if (flaskList.Any())
             {
                 foreach (Entity flask in flaskList)
@@ -114,7 +114,7 @@ namespace AutoQuit
             return false;
         }
 
-        public List<Entity> getAllFlaskInfo()
+        public List<Entity> GetAllFlaskInfo()
         {
             List<Entity> flaskList = new List<Entity>();
 
@@ -223,20 +223,20 @@ namespace AutoQuit
     {
         public AutoQuitSettings()
         {
-            percentHPQuit = new RangeNode<float>(35f, 0f, 100f);
-            percentESQuit = new RangeNode<float>(35f, 0, 100);
-            forcedAutoQuit = new HotkeyNode(Keys.F4);
+            PercentHPQuit = new RangeNode<float>(35f, 0f, 100f);
+            PercentESQuit = new RangeNode<float>(35f, 0, 100);
+            ForcedAutoQuit = new HotkeyNode(Keys.F4);
         }
 
         #region Auto Quit Menu
         [Menu("Select key for Forced Quit", 1)]
-        public HotkeyNode forcedAutoQuit { get; set; }
+        public HotkeyNode ForcedAutoQuit { get; set; }
         [Menu("Min % Life to Auto Quit", 2)]
-        public RangeNode<float> percentHPQuit { get; set; }
+        public RangeNode<float> PercentHPQuit { get; set; }
         [Menu("Min % ES Auto Quit", 3)]
-        public RangeNode<float> percentESQuit { get; set; }
+        public RangeNode<float> PercentESQuit { get; set; }
         [Menu("Quit if HP flasks are empty", 4)]
-        public ToggleNode emptyHPFlasks { get; set; } = new ToggleNode(false);
+        public ToggleNode EmptyHPFlasks { get; set; } = new ToggleNode(false);
         #endregion
 
         public ToggleNode Enable { get; set; } = new ToggleNode(true);
